@@ -1,6 +1,5 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
-
 </script>
 
 <template>
@@ -17,6 +16,7 @@ import { Search } from '@element-plus/icons-vue'
         <el-main>
         </el-main>
         <el-aside>
+          <CurrentTab></CurrentTab>
         </el-aside>
       </el-container>
     </el-container>

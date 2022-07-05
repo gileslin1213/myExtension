@@ -1,21 +1,47 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { Search } from '@element-plus/icons-vue'
+
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <div class="common-layout">
+    <el-container>
+      <el-header>
+        <div style="width: calc(80% - 600px);text-align: center;margin: 0 auto;">
+          <el-input placeholder="搜尋" :prefix-icon="Search" />
+        </div>
+      </el-header>
+      <el-container>
+        <section class="menu">
+        </section>
+        <el-main>
+        </el-main>
+        <el-aside>
+        </el-aside>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
+}
+
+.el-header {
+  padding-top: 20px;
+  box-shadow: var(--el-box-shadow-dark);
+  background-color: var(--el-bg-color);
+}
+
+.menu,
+aside {
+  width: 300px;
+  height: calc(100vh - 60px);
+  box-shadow: var(--el-box-shadow-dark);
+}
+
+main {
+  height: calc(100vh - 60px);
 }
 </style>

@@ -1,0 +1,11 @@
+{
+  "name": "Giles's extension",
+  "description": "Build an Extension by myself",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["activeTab", "tabs"],
+  "action": {}
+}

@@ -7,7 +7,7 @@ import { Search } from '@element-plus/icons-vue'
   <div class="common-layout">
     <el-container>
       <el-header>
-        <div style="width: calc(80% - 600px);text-align: center;margin: 0 auto;">
+        <div style="max-width: 500px;text-align: center;margin: 0 auto;">
           <el-input placeholder="搜尋" :prefix-icon="Search" />
         </div>
       </el-header>
@@ -30,7 +30,7 @@ body {
 
 .el-header {
   padding-top: 20px;
-  box-shadow: var(--el-box-shadow-dark);
+  box-shadow: 0px 5px 10px rgb(0 0 0 / 72%), 0px 8px 20px -1px #000000;
   background-color: var(--el-bg-color);
 }
 

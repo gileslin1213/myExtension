@@ -14,6 +14,7 @@ import { Search } from '@element-plus/icons-vue'
         <section class="menu">
         </section>
         <el-main>
+          <MyMain></MyMain>
         </el-main>
         <el-aside>
           <CurrentTab></CurrentTab>

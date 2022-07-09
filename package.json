@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eslintInit": "eslint --init",
+    "lint": "eslint src/*.vue"
   },
+  "prettier": "prettier-config-standard",
   "dependencies": {
     "element-plus": "^2.2.6",
     "vue": "^3.2.25",
@@ -14,6 +17,13 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
+    "eslint": "^8.19.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.2.0",
+    "prettier-config-standard": "^5.0.0",
     "unplugin-auto-import": "^0.9.1",
     "unplugin-vue-components": "^0.20.1",
     "vite": "^2.9.9"

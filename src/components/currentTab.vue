@@ -17,12 +17,12 @@ const onDragStart = (evt, tab) => {
   evt.dataTransfer.setData('tab', JSON.stringify(tab))
 }
 const onDragEnd = ({ newIndex, oldIndex, originalEvent }) => {
-  let dragTab = tabList[newIndex]
+  const dragTab = tabList[newIndex]
   chrome.tabs.move(dragTab.id, { index: dragTab.index - oldIndex + newIndex })
 }
-const listener = ["onCreated", "onMoved", "onRemoved", "onUpdated"]
+const listener = ['onCreated', 'onMoved', 'onRemoved', 'onUpdated']
 listener.forEach(event => chrome.tabs[event].addListener(() => updateList()))
-updateList();
+updateList()
 </script>
 
 <template>

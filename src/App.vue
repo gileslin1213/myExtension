@@ -12,6 +12,7 @@ import { Search } from '@element-plus/icons-vue'
       </el-header>
       <el-container>
         <section class="menu">
+          <MyMenu></MyMenu>
         </section>
         <el-main>
           <MyMain></MyMain>

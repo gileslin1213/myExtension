@@ -11,7 +11,7 @@ const data = [
   },
   {
     folder: "aa",
-    tags: ["tagA", "tagB"],
+    tags: ["tagA", "tagB", "tagA", "tagA", "tagA", "tagA", "tagA",],
     title: "test2",
     favIconUrl: "https://element-plus.org/images/element-plus-logo-small.svg",
     description: "this is some text",
@@ -30,78 +30,70 @@ const data = [
     title: "test4",
     favIconUrl: "https://element-plus.org/images/element-plus-logo-small.svg",
     description: "this is some text",
-    checked: true
+    checked: false
   }
 ]
 let editData = reactive({ type: null, tab: null })
+
+const RowClassName = ({ row }) => {
+  return row.checked ? '' : 'unchecked'
+}
+const handleClick = (row) => {
+  editData.tab = row
+  editData.type = "edit"
+}
 const onDrop = (evt) => {
   const savaTab = evt.dataTransfer.getData('tab')
-  editData.tab= JSON.parse(savaTab);
+  editData.tab = JSON.parse(savaTab);
   editData.type = 'create'
 }
 </script>
 
 <template>
-  <!-- <el-empty description="沒有資料" /> -->
-  <ul @drop="onDrop" @dragover.prevent @dragenter.prevent>
-    <li v-for="el in data">
-      <el-tooltip effect="dark" :content="el.description" placement="top-start">
-        <div style="flex-grow:1">
-          <div style="display:flex;align-items:center">
-            <img :src="el.favIconUrl ? el.favIconUrl : 'favicon.ico'">
-            <span>{{ el.title }}</span>
-          </div>
-          <div>
-            <el-tag v-for="item in el.tags" effect="plain" size="small">
-              {{ item }}
-            </el-tag>
-          </div>
-        </div>
-      </el-tooltip>
-      <el-button @click="editData.type = 'edit';editData.tab = el; " :icon="Edit" text></el-button>
-    </li>
-  </ul>
-
+  <el-button @click="editData.type = 'edit'; " :icon="Edit" text></el-button>
+  <el-table :data="data" :show-header="false" :row-class-name="RowClassName" @cell-click="handleClick">
+    <el-table-column width="40">
+      <template #default="scope">
+        <img :src="scope.row.favIconUrl ?? 'favicon.ico'" />
+      </template>
+    </el-table-column>
+    <el-table-column prop="title" />
+    <el-table-column width="400">
+      <template #default="scope">
+        <el-tag v-for="item in scope.row.tags" effect="plain">
+          {{ item }}
+        </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column type="expand">
+      <template #default="props">
+        {{ props.row.description }}
+      </template>
+    </el-table-column>
+  </el-table>
   <editForm v-model="editData.type" :form-data="editData.tab"></editForm>
 </template>
 
 <style scoped>
-ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  font-size: 1.25rem;
-  height: 100%;
-}
-
-li {
-  padding: .5em;
-  border-radius: .25em;
-  display: flex;
-  align-items: center;
-}
-
-li:hover {
-  background: #000;
+.el-table {
+  font-size: 18px;
 }
 
 img {
-  margin-right: .8em;
-  width: 1em;
-  height: 1em;
-}
-
-span {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-button {
-  font-size: inherit;
+  width: 20px;
+  vertical-align: middle;
 }
 
 .el-tag {
   margin-right: .5em;
+}
+</style>
+<style>
+.el-table .unchecked {
+  background-color: var(--el-color-danger-light-9);
+}
+
+.el-table .cell {
+  line-height: 30px;
 }
 </style>

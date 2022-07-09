@@ -21,15 +21,17 @@ const form = computed(() => {
   }
   return reactive(obj)
 })
-
 </script>
 
 <template>
   <el-dialog :model-value="Boolean(modelValue)" @close="emit('update:modelValue', null)" title="新增" width="50%">
     <el-form label-width="120px">
       <el-form-item label="標題">
-        <img :src="form.favIconUrl ? form.favIconUrl : 'favicon.ico'">
-        <el-input v-model="form.title" />
+        <el-input v-model="form.title">
+          <template #prefix>
+            <img :src="form.favIconUrl || 'favicon.ico'">
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item label="連結">
         <el-input v-model="form.url" />
@@ -61,9 +63,7 @@ const form = computed(() => {
 }
 
 img {
-  margin-bottom: .8em;
   width: 1em;
-  height: 1em;
 }
 
 .el-tag {

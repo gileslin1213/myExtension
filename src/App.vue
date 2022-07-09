@@ -18,7 +18,7 @@ import { Search } from '@element-plus/icons-vue'
           <MyMain></MyMain>
         </el-main>
         <el-aside>
-          <CurrentTab></CurrentTab>
+          <!-- <CurrentTab></CurrentTab> -->
         </el-aside>
       </el-container>
     </el-container>

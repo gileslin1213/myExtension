@@ -2,27 +2,19 @@
 import { Close } from '@element-plus/icons-vue'
 import draggable from 'vuedraggable'
 
-const tabList = reactive([])
+const store = useStore()
 
-const updateList = () => {
-  chrome.tabs.query({ pinned: false }, (tabs) => {
-    tabList.splice(0)
-    tabList.push(...tabs)
-  })
-}
-const removeTab = (tab) => {
-  chrome.tabs.remove(tab.id)
-}
+const tabList = computed(() => store.state.tab.currentTabs);
+
+
 const onDragStart = (evt, tab) => {
   evt.dataTransfer.setData('tab', JSON.stringify(tab))
 }
 const onDragEnd = ({ newIndex, oldIndex, originalEvent }) => {
-  const dragTab = tabList[newIndex]
-  chrome.tabs.move(dragTab.id, { index: dragTab.index - oldIndex + newIndex })
+  const dragTab = JSON.parse(originalEvent.dataTransfer.getData('tab'))
+  store.dispatch('tab/moveTabs', { id: dragTab.id, index: dragTab.index - oldIndex + newIndex })
 }
-const listener = ['onCreated', 'onMoved', 'onRemoved', 'onUpdated']
-listener.forEach(event => chrome.tabs[event].addListener(() => updateList()))
-updateList()
+store.dispatch('tab/listenerInit')
 </script>
 
 <template>
@@ -32,7 +24,7 @@ updateList()
         <li @dragstart="onDragStart($event, element)">
           <img :src="element.favIconUrl ? element.favIconUrl : 'favicon.ico'">
           <span>{{ element.title }}</span>
-          <el-button @click="removeTab(element)" :icon="Close" text></el-button>
+          <el-button @click="store.dispatch('tab/removeTabs', element.id)" :icon="Close" text></el-button>
         </li>
       </template>
     </draggable>

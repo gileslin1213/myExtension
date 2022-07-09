@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     Vue(),
     AutoImport({
-      imports: ['vue', '@vueuse/core'],
+      imports: ['vue', '@vueuse/core','vuex'],
       resolvers: [ElementPlusResolver()]
     }),
     Components({

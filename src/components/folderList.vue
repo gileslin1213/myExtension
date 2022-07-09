@@ -43,31 +43,28 @@ const list = reactive([
     ],
   },
 ]);
-const contextMenu = reactive({ position: null, data: null, node: null, show: false });
+const contextMenu = reactive({ position: null, node: null, show: false });
 const handleRightClick = ({ clientX, clientY }, data, node) => {
   // console.log( event,data, node);
   contextMenu.position = { x: clientX, y: clientY }
-  contextMenu.data = data
   contextMenu.node = node
   contextMenu.show = true
 };
 const treeRef = ref(null);
 const edit = (value) => {
-  contextMenu.data.label = value
+  contextMenu.node.data.label = value
 }
 const create = (value) => {
-  unref(treeRef).append({ label: value }, contextMenu.data)
+  unref(treeRef).append({ label: value }, contextMenu.node)
 }
-const remove = () => unref(treeRef).remove(contextMenu.data) 
+const remove = () => unref(treeRef).remove(contextMenu.node) 
 </script>
 
 <template>
-  <a @click="treeRef.remove({label:`test`})">test1</a>
-  <a @click="treeRef.append({label:`test`},contextMenu.node)">test2</a>
-  <el-tree ref="treeRef" :data="list" node-key="label" @node-contextmenu="handleRightClick" default-expand-all
+  <el-tree ref="treeRef" :data="list" @node-contextmenu="handleRightClick" default-expand-all
     :expand-on-click-node="false">
   </el-tree>
-  <ContextMenu v-model="contextMenu.show" :data="contextMenu.data" :position="contextMenu.position"
+  <ContextMenu v-model="contextMenu.show" :data="contextMenu.node.data" :position="contextMenu.position"
     :buttons="['edit', 'create', 'delete']" @edit="edit" @create="create" @delete="remove">
   </ContextMenu>
 </template>

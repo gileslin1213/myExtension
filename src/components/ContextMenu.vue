@@ -64,6 +64,7 @@ onClickOutside(contextMenuRef, () => handleCancel())
 #contextMenu {
   position: absolute;
   width: fit-content;
+  z-index:10;
 }
 
 #contextMenu.confirm {

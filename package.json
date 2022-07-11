@@ -12,6 +12,7 @@
   "prettier": "prettier-config-standard",
   "dependencies": {
     "element-plus": "^2.2.6",
+    "firebase": "^9.9.0",
     "vue": "^3.2.25",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.0.2"
@@ -27,6 +28,7 @@
     "prettier-config-standard": "^5.0.0",
     "unplugin-auto-import": "^0.9.1",
     "unplugin-vue-components": "^0.20.1",
-    "vite": "^2.9.9"
+    "vite": "^2.9.9",
+    "vite-plugin-environment": "^1.1.1"
   }
 }

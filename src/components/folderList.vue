@@ -3,71 +3,57 @@
 //   select:String
 // })
 // const emit = defineEmits(["select"]);
-const list = reactive([
-  {
-    label: 'Level one 1',
-    children: [
-      {
-        label: 'Level two 1-1',
-        children: [
-          {
-            label: 'Level three 1-1-1',
-          },
-          {
-            label: 'Level three 1-1-2',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Level one 2',
-    children: [
-      {
-        label: 'Level two 2-1',
-      },
-      {
-        label: 'Level two 2-2',
-      },
-    ],
-  },
-  {
-    label: 'Level one 3',
-    children: [
-      {
-        label: 'Level two 3-1',
-      },
-      {
-        label: 'Level two 3-2',
-      },
-    ],
-  },
-]);
-const contextMenu = reactive({ position: null, node: null, show: false });
-const handleRightClick = ({ clientX, clientY }, data, node) => {
+import db from '../firebase'
+import { doc, setDoc, addDoc, updateDoc, getDoc } from 'firebase/firestore'
+
+const docRef = doc(db, 'cities/folder')
+const list = reactive([])
+const contextMenu = reactive({ position: null, data: null, show: false })
+const handleRightClick = (event, data) => {
+  event.preventDefault()
+  const { clientX, clientY } = event
   // console.log( event,data, node);
   contextMenu.position = { x: clientX, y: clientY }
-  contextMenu.node = node
+  contextMenu.data = data ?? null
   contextMenu.show = true
-};
-const treeRef = ref(null);
+}
+
+const treeRef = ref(null)
 const edit = (value) => {
-  contextMenu.node.data.label = value
+  contextMenu.data.label = value
+  // updateDoc(docRef, toObject(list))
 }
 const create = (value) => {
-  unref(treeRef).append({ label: value }, contextMenu.node)
+  unref(treeRef).append({ label: value }, contextMenu.data)
+  updateDoc(docRef, { wrapper: list })
+  // console.log(toObject(list));
 }
-const remove = () => unref(treeRef).remove(contextMenu.node) 
+const remove = () => {
+  unref(treeRef).remove(contextMenu.data)
+  // updateDoc(docRef, toObject(list))
+}
+
+onMounted(() => {
+  getDoc(docRef).then((docSnap) => {
+    const data = docSnap.data()
+    if (Object.keys(data).length) {
+      data.wrapper.forEach(el => list.push(el))
+    }
+  })
+})
 </script>
 
 <template>
-  <el-tree ref="treeRef" :data="list" @node-contextmenu="handleRightClick" default-expand-all
-    :expand-on-click-node="false">
-  </el-tree>
-  <ContextMenu v-model="contextMenu.show" :data="contextMenu.node.data" :position="contextMenu.position"
-    :buttons="['edit', 'create', 'delete']" @edit="edit" @create="create" @delete="remove">
-  </ContextMenu>
+  <div @contextmenu="handleRightClick" style="flex-grow:1">
+    <el-tree ref="treeRef" :data="list" node-key="label" @node-contextmenu="handleRightClick" default-expand-all
+      :expand-on-click-node="false" />
+    <ContextMenu v-model="contextMenu.show" :data="contextMenu.data" :position="contextMenu.position" @edit="edit"
+      @create="create" @delete="remove" :inputData="true" />
+  </div>
 </template>
 
 <style scoped>
+.el-tree {
+  flex-grow: 1;
+}
 </style>

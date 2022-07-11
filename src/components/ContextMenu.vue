@@ -1,38 +1,39 @@
 <script setup>
-import { Edit, Plus, Delete } from "@element-plus/icons-vue";
+import { Edit, Plus, Delete } from '@element-plus/icons-vue'
 
 const props = defineProps({
   modelValue: Boolean,
   data: Object,
   position: Object,
-  buttons: Array
+  inputData: Boolean
 })
-const emit = defineEmits(['update:modelValue', 'edit', 'create', 'delete']);
+const emit = defineEmits(['update:modelValue', 'edit', 'create', 'delete'])
 const type = ref(null)
 const input = ref(null)
 const inputRef = ref(null)
 const contextMenuRef = ref(null)
-const icons = {
-  create: Plus,
-  edit: Edit,
-  delete: Delete
-}
+const events = computed(() => {
+  const edit = { name: 'edit', icon: Edit,getProps:true,input:true }
+  const remove = { name: 'delete', icon: Delete,needConfirm:true }
+  const create = { name: 'create', icon: Plus,input:true }
+  return props.data ? [edit, remove, create] : [create]
+})
 const handleClick = (evt) => {
-  switch (evt) {
-    case 'edit':
-      input.value = props.data.label
-    default:
-      type.value = evt
-      break;
+  if (!props.inputData && evt.needConfirm) {
+    emit(evt)
+    handleCancel()
+  } else {
+    if (evt.getProps) input.value = props.data.label
+    type.value = evt
   }
 }
 const handleConfirm = () => {
-  emit(type.value, input.value);
-  handleCancel();
+  emit(type.value.name, input.value)
+  handleCancel()
 }
 const handleCancel = () => {
-  input.value = null;
-  type.value = null;
+  input.value = null
+  type.value = null
   emit('update:modelValue', false)
 }
 const vFocus = {
@@ -43,19 +44,38 @@ const vFocus = {
 onClickOutside(contextMenuRef, () => handleCancel())
 </script>
 
-<template >
-  <div ref="contextMenuRef" id="contextMenu" v-if="modelValue" :class="{ confirm: type }"
+<template>
+  <div
+    ref="contextMenuRef"
+    id="contextMenu"
+    v-if="modelValue"
+    :class="{ confirm: type }"
     :style="`top:${position.y}px;left:${position.x}px`">
     <div v-if="!type">
-      <el-button v-for="btn in buttons" @click="handleClick(btn)" :icon="icons[btn]" circle />
+      <el-button
+        v-for="event in events"
+        @click="handleClick(event)"
+        :key="event.name"
+        :icon="event.icon"
+        circle />
     </div>
     <div v-else>
-      <el-row v-if="!(type == 'delete')" style="margin-bottom: 1em;">
-        <el-input v-focus ref="inputRef" v-model="input" @keydown.enter="handleConfirm" placeholder="請輸入名稱" />
+      <el-row v-if="inputData && type.input" style="margin-bottom: 1em">
+        <el-input
+          v-focus
+          ref="inputRef"
+          v-model="input"
+          @keydown.enter="handleConfirm"
+          placeholder="請輸入名稱" />
       </el-row>
       <el-row justify="end">
         <el-button @click="handleCancel" type="info" plain>取消</el-button>
-        <el-button @click="handleConfirm" :type="type == 'delete' ? 'danger' : 'primary'" plain>確定</el-button>
+        <el-button
+          @click="handleConfirm"
+          :type="type.needConfirm ? 'danger' : 'primary'"
+          plain
+          >確定</el-button
+        >
       </el-row>
     </div>
   </div>

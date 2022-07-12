@@ -1,9 +1,8 @@
-import { defineConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import EnvironmentPlugin from 'vite-plugin-environment'
+import { defineConfig } from 'vite';
+import Vue from '@vitejs/plugin-vue';
+import AutoImport from 'unplugin-auto-import/dist/vite';
+import Components from 'unplugin-vue-components/dist/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/dist/resolvers';
 
 // https://vitejs.dev/config/
 
@@ -11,18 +10,17 @@ export default defineConfig({
   plugins: [
     Vue(),
     AutoImport({
-      imports: ['vue', '@vueuse/core','vuex'],
-      resolvers: [ElementPlusResolver()]
+      eslintrc: {
+        enabled: true, // Default `false`
+        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
+        globalsPropValue: true,
+      },
+      imports: ['vue', '@vueuse/core', 'vuex'],
+      resolvers: [ElementPlusResolver()],
     }),
     Components({
       dirs: ['src/components'],
-      resolvers: [ElementPlusResolver()]
+      resolvers: [ElementPlusResolver()],
     }),
-    EnvironmentPlugin('all', { prefix: 'FIREBASE_' }),
   ],
-  exlintrc: {
-    enabled: true,
-    filePath: './eslintrc-auto-import.json',
-    globalsPropValue: true
-  }
-})
+});

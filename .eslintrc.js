@@ -2,20 +2,21 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    'webextensions': true
+    webextensions: true,
   },
   extends: [
-    'plugin:vue/vue3-essential',
-    'standard',
-    './eslintrc-auto-import.json'
+    'plugin:vue/vue3-recommended',
+    'plugin:prettier/recommended',
+    'plugin:import/recommended',
+    'airbnb-base',
+    './.eslintrc-auto-import.json',
   ],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
   },
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
   rules: {
-  }
-}
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+  },
+};

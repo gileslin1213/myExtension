@@ -1,79 +1,89 @@
 <script setup>
-import { Edit, Plus, Delete } from '@element-plus/icons-vue'
+import { Edit, Plus, Delete } from '@element-plus/icons-vue';
 
 const props = defineProps({
-  modelValue: Boolean,
-  data: Object,
-  position: Object,
-  inputData: Boolean
-})
-const emit = defineEmits(['update:modelValue', 'edit', 'create', 'delete'])
-const type = ref(null)
-const input = ref(null)
-const inputRef = ref(null)
-const contextMenuRef = ref(null)
+  data: {
+    type: Object,
+    default: null,
+  },
+  position: {
+    type: Object,
+    default: null,
+  },
+  check: {
+    type: Array,
+    default: null,
+  },
+});
+const emit = defineEmits(['change', 'cancel']);
+const type = ref(null);
+const input = ref(null);
+const contextMenuRef = ref(null);
 const events = computed(() => {
-  const edit = { name: 'edit', icon: Edit,getProps:true,input:true }
-  const remove = { name: 'delete', icon: Delete,needConfirm:true }
-  const create = { name: 'create', icon: Plus,input:true }
-  return props.data ? [edit, remove, create] : [create]
-})
+  const edit = {
+    name: 'edit',
+    icon: Edit,
+    getProps: true,
+    input: true,
+  };
+  const remove = { name: 'remove', icon: Delete, needConfirm: true };
+  const create = { name: 'create', icon: Plus, input: true };
+  return props.data ? [create, edit, remove] : [create];
+});
+
 const handleClick = (evt) => {
-  if (!props.inputData && evt.needConfirm) {
-    emit(evt)
-    handleCancel()
-  } else {
-    if (evt.getProps) input.value = props.data.label
-    type.value = evt
-  }
-}
+  if (evt.getProps) input.value = props.data.label;
+  type.value = evt;
+};
+const validate = computed(() => props.check.includes(input.value));
 const handleConfirm = () => {
-  emit(type.value.name, input.value)
-  handleCancel()
-}
-const handleCancel = () => {
-  input.value = null
-  type.value = null
-  emit('update:modelValue', false)
-}
+  emit('change', type.value.name, props.data, input.value);
+  emit('cancel');
+};
 const vFocus = {
-  mounted: () => {
-    unref(inputRef).focus()
-  }
-}
-onClickOutside(contextMenuRef, () => handleCancel())
+  mounted: (el) => {
+    const _input = el.querySelector('input');
+    _input.focus();
+    // mounted can't get value by el
+    // if (_input.value) _input.select();
+  },
+};
+onClickOutside(contextMenuRef, () => emit('cancel'));
 </script>
 
 <template>
   <div
-    ref="contextMenuRef"
     id="contextMenu"
-    v-if="modelValue"
+    ref="contextMenuRef"
     :class="{ confirm: type }"
-    :style="`top:${position.y}px;left:${position.x}px`">
+    :style="`left:${position.clientX - 10}px;top:${position.clientY - 10}px`"
+  >
     <div v-if="!type">
       <el-button
         v-for="event in events"
-        @click="handleClick(event)"
         :key="event.name"
         :icon="event.icon"
-        circle />
+        circle
+        @click="handleClick(event)"
+      />
     </div>
     <div v-else>
-      <el-row v-if="inputData && type.input" style="margin-bottom: 1em">
+      <el-row v-if="type.input" style="margin-bottom: 1em">
         <el-input
-          v-focus
-          ref="inputRef"
           v-model="input"
+          v-focus
+          :class="{ error: validate }"
+          placeholder="請輸入名稱"
           @keydown.enter="handleConfirm"
-          placeholder="請輸入名稱" />
+        />
       </el-row>
       <el-row justify="end">
-        <el-button @click="handleCancel" type="info" plain>取消</el-button>
+        <el-button type="info" plain @click="emit('cancel')">取消</el-button>
         <el-button
-          @click="handleConfirm"
           :type="type.needConfirm ? 'danger' : 'primary'"
           plain
+          :disabled="validate || (type.input && !Boolean(input))"
+          @click="handleConfirm"
           >確定</el-button
         >
       </el-row>
@@ -84,7 +94,7 @@ onClickOutside(contextMenuRef, () => handleCancel())
 #contextMenu {
   position: absolute;
   width: fit-content;
-  z-index:10;
+  z-index: 10;
 }
 
 #contextMenu.confirm {
@@ -94,8 +104,18 @@ onClickOutside(contextMenuRef, () => handleCancel())
   padding: 1em;
   box-shadow: 0px 0px 20px #000;
 }
-
 #contextMenu .el-button {
   background: #000000;
+}
+.el-input.error {
+  --el-input-border-color: var(--el-color-danger-light-3);
+  --el-input-hover-border-color: var(--el-color-danger-light-3);
+  --el-input-focus-border-color: var(--el-color-danger-light-3);
+}
+.error::after {
+  content: '重複命名';
+  color: var(--el-color-danger-light-3);
+  position: absolute;
+  top: 1.8em;
 }
 </style>

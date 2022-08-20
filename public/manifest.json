@@ -6,6 +6,13 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "tabs"],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "identity",
+    "identity.email",
+    "contextMenus",
+    "storage"
+  ],
   "action": {}
 }

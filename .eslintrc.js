@@ -18,5 +18,15 @@ module.exports = {
   plugins: ['vue'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-unresolved': 0,
+    'no-underscore-dangle': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [['@', './src']],
+        extensions: ['.js', '.json'],
+      },
+    },
   },
 };
